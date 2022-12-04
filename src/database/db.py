@@ -53,5 +53,32 @@ def addBook(ISBN, author, title, genre, stock, price, percentRoyalty, noPages, p
   cur.close()
   conn.close()
 
+def addCustomer(uname, pword, email, lname, fname):
+  conn = getConn()
+  cur = conn.cursor()
+  query = "INSERT INTO Customer (cnumber, uname, pword, email, lname, fname) "
+  query += "VALUES (DEFAULT, %s, %s, %s, %s, %s)"
+  cur.execute(query, (uname, pword, email, lname, fname))
+  conn.commit()
+  cur.close()
+  conn.close()
+
+def addBillingShipping(cNumber, isPrimary, addressl1, addressl2, city, provst, country, pcode, ccardno, exp, ccn, ccname):
+  conn = getConn()
+  cur = conn.cursor()
+  query = "INSERT INTO BillingShippingInfo (bsid, addressl1, addressl2, city, provst, country, pcode, ccardno, exp, ccn, ccname) "
+  query += "VALUES (DEFAULT, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) returning bsid"
+  cur.execute(query, (addressl1, addressl2, city, provst, country, pcode, ccardno, exp, ccn, ccname))
+  bsid = cur.fetchone()[0]
+
+  query = "INSERT INTO BSIDirectory (bsid, cnumber, isprimary) VALUES (%s, %s, %s)"
+  cur.execute(query, (bsid, cNumber, isPrimary))
+  
+  conn.commit()
+  cur.close()
+  conn.close()
+
 #deleteBookById(15)
 #addBook("1234-5678-9103", "Irina Ionescu", "Adventures in Postgres", "Drama", 1, 10000.01, 100, 1, 4 )
+#addCustomer("dippy", "402375329.N3ZnpkqkIQ1EI5aZ3h7WB66b7d1-VKgFd_3-XCmsWsw=", "dippy@kittyworld.com", "Dot", "Dippin")
+#addBillingShipping(1, True, "123 Any Street", None, "Whoville", "FL", "North Pole", "111111", "123456789", "0101", "123", "Mr. Grinch")
