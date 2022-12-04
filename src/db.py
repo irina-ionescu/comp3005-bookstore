@@ -1,6 +1,9 @@
 import psycopg2
 import os
 
+BOOK_SELECT="""SELECT b.bookId, b.isbn, b.author, b.title, b.genre, b.price, b.stock, p.pubname
+    FROM book as b JOIN publisher as p ON b.pubId=p.pubId """
+
 def getConn():
   try:
     conn = psycopg2.connect(database="Bookstore", 
@@ -16,22 +19,41 @@ def getConn():
 def getAllBooks():
   conn = getConn()
   cur = conn.cursor()
-  cur.execute("SELECT * FROM Book")
+  cur.execute(BOOK_SELECT)
   rows = cur.fetchall()
   cur.close()
   conn.close()
   return rows
 
-def searchBooks(ISBN=None,author=None,title=None,genre=None):
+def searchBooksByText(ISBN=None,author=None,title=None,genre=None,publisher=None):
   conn = getConn()
   cur = conn.cursor()
-  query = "SELECT * FROM Book WHERE ISBN LIKE %s OR author LIKE %s OR title LIKE %s OR genre LIKE %s"
-  cur.execute(query, (ISBN, author, title, genre))
+  query = BOOK_SELECT + "WHERE b.isbn LIKE %s OR b.author LIKE %s OR b.title LIKE %s OR b.genre LIKE %s OR p.pubname LIKE %s"
+  cur.execute(query, (ISBN, author, title, genre, publisher))
   rows = cur.fetchall()
   cur.close()
   conn.close()
   return rows
 
+def searchBooksByPriceRange(minPrice,maxPrice):
+  conn = getConn()
+  cur = conn.cursor()
+  query = BOOK_SELECT + "WHERE b.price >= %s AND b.price <= %s"
+  cur.execute(query, (minPrice, maxPrice))
+  rows = cur.fetchall()
+  cur.close()
+  conn.close()
+  return rows
+
+def searchBooksByStockRange(minStock,maxStock):
+  conn = getConn()
+  cur = conn.cursor()
+  query = BOOK_SELECT + "WHERE b.stock >= %s AND b.stock <= %s"
+  cur.execute(query, (minStock, maxStock))
+  rows = cur.fetchall()
+  cur.close()
+  conn.close()
+  return rows
 
 def deleteBookById(bookId):
   conn = getConn()
