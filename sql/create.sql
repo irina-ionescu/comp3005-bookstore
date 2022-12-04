@@ -167,13 +167,13 @@ INSERT INTO Book(
 	VALUES (DEFAULT, '1234-1111-9014', 'Mark Twain', 'The Adventures of Tom Sawyer', 'Fiction', 5, 9.5, 10, 231, 3);
 INSERT INTO Book(
 	bookId, ISBN, author, title, genre, stock, price, percentRoyalty, noPages, pubId)
-	VALUES (DEFAULT, '1333-2222-3061', 'Isac Asimov', 'Foundation', 'Sci-Fi', 15, 21.75, 15, 431, 2);
+	VALUES (DEFAULT, '1333-2222-3061', 'Isaac Asimov', 'Foundation', 'Sci-Fi', 15, 21.75, 15, 431, 2);
 INSERT INTO Book(
 	bookId, ISBN, author, title, genre, stock, price, percentRoyalty, noPages, pubId)
-	VALUES (DEFAULT, '1333-2222-3064', 'Isac Asimov', 'Foundation and Empire', 'Sci-Fi', 2, 22, 15, 441, 2);
+	VALUES (DEFAULT, '1333-2222-3064', 'Isaac Asimov', 'Foundation and Empire', 'Sci-Fi', 2, 22, 15, 441, 2);
 INSERT INTO Book(
 	bookId, ISBN, author, title, genre, stock, price, percentRoyalty, noPages, pubId)
-	VALUES (DEFAULT, '1333-2222-3066', 'Isac Asimov', 'Second Foundation', 'Sci-Fi', 5, 15.25, 15, 330, 2);
+	VALUES (DEFAULT, '1333-2222-3066', 'Isaac Asimov', 'Second Foundation', 'Sci-Fi', 5, 15.25, 15, 330, 2);
 INSERT INTO Book(
 	bookId, ISBN, author, title, genre, stock, price, percentRoyalty, noPages, pubId)
 	VALUES (DEFAULT, '5432-3333-2311', 'Mo Willems', 'Don''t Let the Pigeon Drive the Bus', 'Fiction', 20, 5, 20, 15, 1);

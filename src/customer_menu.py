@@ -28,15 +28,15 @@ def getUChoiceMainMenu()->int :
 def getUChoiceSearchColl()->list :
   try:
     choice = [int(c) for c in input("""Choose search parameters, one number or multiple separated by space :
-                              1. by title
+                              1. by ISBN
                               2. by author
-                              3. by ISBN
+                              3. by title
                               4. by genre
                               5. by price
                               6. by publisher
                               7. books in stock
                               0. return to previous menu
-                              Example: 1 2 means search by title and author 
+                              Example: 2 3 means search by title or author 
                       Choice: """).split()]
     for c in choice:                  
       if int(c) < 0 or int(c) >7:
@@ -59,8 +59,8 @@ def getUChoiceMakeAcctLogIn()->int :
   except:
     print("Not a valid integer")
 
-choices = getUChoiceSearchColl() 
-print(choices) 
+#choices = getUChoiceSearchColl() 
+#print(choices) 
   
 
 

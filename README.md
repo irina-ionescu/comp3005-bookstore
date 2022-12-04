@@ -6,6 +6,7 @@ This is a sample bookstore application.
 - Postgres 14.x installed on localhost(127.0.0.1)
 - Python 3.8
 - psycopg2 installed (psycopg.org/docs/install.html)
+- PrettyTable: pip install PTable
 
 ## Setup
 - Environment variables for PGUSER, PGPORT (run pg_env.sh from the Postgres installation directory)
