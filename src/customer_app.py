@@ -2,19 +2,55 @@ import customer_menu as menu
 import db
 from prettytable import PrettyTable
 
-def printBook(ISBN:int , title:str, author:str, price:int, currQuantity:int, publisher:str):
-  print ( str(ISBN) + "\t" + title + "\t" + author + "\t" + str(price) + "\t" + str(currQuantity) + "\t" + publisher )
+cart = []
+
+
+def printBook(book):
+  printBookList([book])
 
 def printOrder(oNum:int , shipAddress:str, billAddress:str, name:str, trackingInfo:str, cost:int, datePlaced:str):
   print(str(oNum) + "\t" + shipAddress + "\t" + billAddress + "\t" + name + "\t" + trackingInfo + "\t" + "$" + str(cost) + datePlaced)
   
 
 def printBookList(books):
-    table = PrettyTable(["Book ID","ISBN","Author","Title","Genre","Stock","Price","Publisher"])
+    table = PrettyTable(["Book ID","ISBN","Author","Title","Genre","Price","Stock","Publisher"])
     for row in books:
       table.add_row(row[:8])
     print(table)
+    choice = menu.getUChoiceBookViewMenu()
+    if choice == 1 or choice == 2:
+      bookId = menu.getUChoiceInputInt("Enter book id:")
+      selected = None
+      for book in books:
+        if book[0] == bookId:
+          selected = book
+          break
+      if selected:
+        if choice == 2:
+          printBook(selected)
+        if choice == 1:
+          stock = selected[6]
+          quantity = menu.getUChoiceInputInt("Enter quantity:",1,stock)
+          for i in range(quantity):
+            cart.append(selected)
+          print("Book added to cart.")
+          printCart(cart)
 
+def printCart(cart):
+  if len(cart) == 0:
+    print("Cart is empty.")
+    return
+  print("Cart contents:")
+  table = PrettyTable(["Book ID","ISBN","Author","Title","Genre","Price"])
+  total = 0
+  for row in cart:
+      table.add_row(row[:6])
+      total+=row[5]
+  print(table)
+  print("Total:",total)
+  choice = menu.getUChoiceCartMenu()
+  if(choice==2):
+    cart.clear()
 
 def doBookSearch():
   searchChoice = menu.getUChoiceSearchColl()
@@ -24,9 +60,7 @@ def doBookSearch():
     return
   elif searchChoice < 6: #text searches allowing for partial matches
     textAttr = ["ISBN","Author","Title","Genre","Publisher"]
-    searchVals = []
-    for attr in textAttr:
-      searchVals.append("")
+    searchVals = ["","","","",""]
     searchVals[searchChoice-1] = "%" + input(textAttr[searchChoice-1]+":") + "%"
     books = db.searchBooksByText(searchVals[0],searchVals[1],searchVals[2], searchVals[3], searchVals[4])
   elif searchChoice == 6: #price range
@@ -38,9 +72,6 @@ def doBookSearch():
 
   printBookList(books)
 
-#menu.printBook(12345, "Amazing book", "Stephen King", 200, 2, "Random Books")
-
-#print("your choice was: " + str(menu.getUChoiceMainMenu()))
 
 while True:
   choice = menu.getUChoiceMainMenu()
@@ -51,3 +82,5 @@ while True:
     printBookList(books)
   elif choice == 2:
     doBookSearch()
+  elif choice == 3:
+    printCart(cart)
