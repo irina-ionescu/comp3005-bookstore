@@ -79,7 +79,7 @@ def getCustomer(uname):
   conn = getConn()
   cur = conn.cursor()
   query = "SELECT * FROM Customer WHERE uname=%s"
-  cur.execute(query,(uname,))
+  cur.execute(query,(uname))
   customer = cur.fetchone()
   conn.commit()
   cur.close()
@@ -110,6 +110,19 @@ def addBillingShipping(cNumber, isPrimary, addressl1, addressl2, city, provst, c
   conn.commit()
   cur.close()
   conn.close()
+  return bsid
+
+#gets publisher id by name
+def getPublisherId(name)->int:
+  conn = getConn()
+  cur = conn.cursor()
+  query = "SELECT pubid FROM Publisher WHERE pubname LIKE %s"
+  cur.execute(query, (name))
+  pubId = cur.fetchone()
+  conn.commit()
+  cur.close()
+  conn.close()
+  return pubId
 
 #deleteBookById(15)
 #addBook("1234-5678-9103", "Irina Ionescu", "Adventures in Postgres", "Drama", 1, 10000.01, 100, 1, 4 )

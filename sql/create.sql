@@ -41,7 +41,7 @@ CREATE TABLE if not exists bsiDirectory (
 
 CREATE TABLE if not exists Publisher (
 	pubId serial,
-  pubName varchar (50) NOT NULL,
+  pubName varchar (50) NOT NULL UNIQUE,
 	pubEmail varchar (100) NOT NULL,
 	bankAcctNo varchar (100) NOT NULL,
   pubAddress varchar (100),
