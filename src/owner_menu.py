@@ -2,7 +2,7 @@ import util as util
 
   
 def getOChoiceMainMenu()->int :
-    choice = input("""What would you like to do?
+    choice = util.getValidIntInput("""What would you like to do?
                               1. List all books
                               2. Add new books
                               3. Remove books
@@ -14,10 +14,11 @@ def getOChoiceMainMenu()->int :
     return choice
 
 def getOChoiceReports()->int:
-  choice = input("""What would you like to do?
-                              1. Sales vs2. expenditures
+  choice = util.getValidIntInput("""What would you like to do?
+                              1. Sales vs. expenditures
                               2. Sales by parameter (example: author, genre, ...)
+                              3. Get orders placed to publishers
                               0. return to previous menu 
-                              Choice: """, 0,2)
+                              Choice: """, 0,3)
   return choice
   
