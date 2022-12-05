@@ -79,7 +79,7 @@ def getCustomer(uname):
   conn = getConn()
   cur = conn.cursor()
   query = "SELECT * FROM Customer WHERE uname=%s"
-  cur.execute(query,(uname))
+  cur.execute(query,(uname,))
   customer = cur.fetchone()
   conn.commit()
   cur.close()
@@ -117,7 +117,7 @@ def getPublisherId(name)->int:
   conn = getConn()
   cur = conn.cursor()
   query = "SELECT pubid FROM Publisher WHERE pubname LIKE %s"
-  cur.execute(query, (name))
+  cur.execute(query, (name,))
   pubId = cur.fetchone()
   conn.commit()
   cur.close()
