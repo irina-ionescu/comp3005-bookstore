@@ -75,6 +75,17 @@ def addBook(ISBN, author, title, genre, stock, price, percentRoyalty, noPages, p
   cur.close()
   conn.close()
 
+def getCustomer(uname):
+  conn = getConn()
+  cur = conn.cursor()
+  query = "SELECT * FROM Customer WHERE uname=%s"
+  cur.execute(query,(uname,))
+  customer = cur.fetchone()
+  conn.commit()
+  cur.close()
+  conn.close()
+  return customer
+
 def addCustomer(uname, pword, email, lname, fname):
   conn = getConn()
   cur = conn.cursor()

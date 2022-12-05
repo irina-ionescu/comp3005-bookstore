@@ -1,9 +1,11 @@
 import customer_menu as menu
 import db
+import security
+import getpass
 from prettytable import PrettyTable
 
 cart = []
-
+customer = None
 
 def printBook(book):
   printBookList([book])
@@ -72,6 +74,41 @@ def doBookSearch():
 
   printBookList(books)
 
+def doLoginOrRegister():
+  choice = menu.getUChoiceMakeAcctLogIn()
+  uname = input("User name:")
+  password = getpass.getpass("Password:")
+  if choice == 2:
+    customer = db.getCustomer(uname)
+    if customer == None:
+      print("Invalid login.")
+    else:
+      vfyPassword = customer[2]
+      if security.vfyPassword(password, vfyPassword) == False:
+        customer = None
+        print("Invalid login!")
+      else:
+        print("You are now logged in as", uname)
+  elif choice == 1:
+    email = input("Email:")
+    lname = input("Last name:")
+    fname = input("First name:")
+    db.addCustomer(uname, security.genHash(password),email,lname,fname)
+    customer = db.getCustomer(uname)
+    if customer != None:
+      print("Account succesfully created. Please enter billing information.")
+      addressl1 = input("Address line 1:")
+      addressl2 = input("Address line 2:")
+      city = input("City:")
+      provst = input("Province/State:")
+      country = input("Country:")
+      pcode = input("Postal code:")
+      ccardno = input("Credit card number:")
+      ccexp = input("Credit card expiration (MMYY):")
+      ccn = input("CCN:")
+      ccname = input("Name on the credit card:")
+      db.addBillingShipping(customer[0],True,addressl1,addressl2,city,provst,country,pcode,ccardno,ccexp,ccn,ccname)
+
 
 while True:
   choice = menu.getUChoiceMainMenu()
@@ -84,3 +121,8 @@ while True:
     doBookSearch()
   elif choice == 3:
     printCart(cart)
+  elif choice == 4:
+    doLoginOrRegister()
+
+
+

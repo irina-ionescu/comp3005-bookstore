@@ -2,7 +2,7 @@
 This is a sample bookstore application.
 
 ## Prerequisites
-- Bash environment, Linux/Mac or Windows + Gitbash
+- Bash environment, Linux/Mac
 - Postgres 14.x installed on localhost(127.0.0.1)
 - Python 3.8
 - psycopg2 installed (psycopg.org/docs/install.html)
