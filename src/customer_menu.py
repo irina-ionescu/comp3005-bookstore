@@ -20,7 +20,9 @@ def getUChoiceBookViewMenu()->int :
   return choice
 
 def getUChoiceMainMenu()->int :
-  choice = util.getValidIntInput("""Hello! Choose an option:
+  choice = util.getValidIntInput("""
+  ---------------------------
+  Main Menu. Choose an option:
   1. See all available books
   2. Search collection by title, author, etc.
   3. View cart
@@ -33,14 +35,14 @@ def getUChoiceMainMenu()->int :
 
 def getUChoiceSearchColl()->int :
   choice = util.getValidIntInput("""Choose search parameters, one number or multiple separated by space:
-  1. by ISBN
-  2. by author
-  3. by title
-  4. by genre
-  5. by publisher
-  6. by price
-  7. books in stock
-  0. return to previous menu
+  1. By ISBN
+  2. By author
+  3. By title
+  4. By genre
+  5. By publisher
+  6. By price
+  7. Books in stock
+  0. Return to previous menu
   Choice: """,0,7)
   return choice
 
@@ -48,7 +50,7 @@ def getUChoiceMakeAcctLogIn()->int :
   choice = util.getValidIntInput("""What would you like to do?
   1. Make a new account
   2. Log in with existing account
-  0. return to previous menu 
+  0. Return to previous menu 
   Choice: """,0,2)
   return choice
 

@@ -96,6 +96,23 @@ def addCustomer(uname, pword, email, lname, fname):
   cur.close()
   conn.close()
 
+def getBillingShipping(cNumber,isPrimary = None):
+  conn = getConn()
+  cur = conn.cursor()
+  query = """
+  SELECT * FROM BillingShippingInfo as bsi 
+  JOIN BSIDirectory as bsiDir on bsi.bsid=bsidir.bsid
+  WHERE cNumber = %s
+  """
+  if isPrimary == True :
+    query+=" AND isPrimary = True"
+  cur.execute(query, (cNumber,))
+  bsi = cur.fetchall()
+  conn.commit()
+  cur.close()
+  conn.close()
+  return bsi
+
 def addBillingShipping(cNumber, isPrimary, addressl1, addressl2, city, provst, country, pcode, ccardno, exp, ccn, ccname):
   conn = getConn()
   cur = conn.cursor()
@@ -123,6 +140,34 @@ def getPublisherId(name)->int:
   cur.close()
   conn.close()
   return pubId
+
+
+def addCustomerOrder(bsid,cnumber,cart):
+  conn = getConn()
+  cur = conn.cursor()
+
+  query = """
+  INSERT INTO customerorder 
+  (orderid, odate, ostatus, bsid, cnumber)
+	VALUES ( DEFAULT, CURRENT_DATE, 'SUBMITTED', %s, %s) returning orderid
+  """
+  cur.execute(query, (bsid, cnumber))
+  orderid = cur.fetchone()
+  
+  query = """
+  INSERT INTO customerordercontents (
+	bookid, orderid, quantity)
+	VALUES (%s, %s, %s);
+  """
+  for book in cart:
+    cur.execute(query,(book[0],orderid,book[6]))
+
+  conn.commit()
+  cur.close()
+  conn.close()
+  return orderid
+
+  
 
 #deleteBookById(15)
 #addBook("1234-5678-9103", "Irina Ionescu", "Adventures in Postgres", "Drama", 1, 10000.01, 100, 1, 4 )

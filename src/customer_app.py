@@ -5,8 +5,7 @@ import getpass
 import util
 from prettytable import PrettyTable
 
-cart = []
-customer = None
+
 
 def printBook(book):
   printSelectBooks([book])
@@ -15,7 +14,7 @@ def printBook(book):
 #  print(str(oNum) + "\t" + shipAddress + "\t" + billAddress + "\t" + name + "\t" + trackingInfo + "\t" + "$" + str(cost) + datePlaced)
   
 
-def printSelectBooks(books):
+def printSelectBooks(books, cart, customer):
     util.printBookList(books)
     choice = menu.getUChoiceBookViewMenu()
     if choice == 1 or choice == 2:
@@ -29,30 +28,78 @@ def printSelectBooks(books):
         if choice == 2:
           printBook(selected)
         if choice == 1:
-          stock = selected[6]
+          cartItem = None
+          cartQuantity = 0
+          for item in cart:
+            if item[0]==selected[0]:
+              cartItem = item
+              quantity = cartItem[6]
+              break
+          stock = selected[6] - cartQuantity
           quantity = util.getValidIntInput("Enter quantity:",1,stock)
-          for i in range(quantity):
-            cart.append(selected)
+          if cartItem == None:
+            cartItem = list(selected[:6])
+            cartItem.append(quantity)
+            cart.append(cartItem)
+          else:
+            cartItem[6]+=quantity
           print("Book added to cart.")
-          printCart(cart)
+          printCart(cart, customer)
 
-def printCart(cart):
+def printCart(cart, customer):
   if len(cart) == 0:
     print("Cart is empty.")
     return
   print("Cart contents:")
-  table = PrettyTable(["Book ID","ISBN","Author","Title","Genre","Price"])
+  table = PrettyTable(["Book ID","ISBN","Author","Title","Genre","Price","Quantity"])
   total = 0
   for row in cart:
-      table.add_row(row[:6])
-      total+=row[5]
+      table.add_row(row)
+      total+=row[5]*row[6]
   print(table)
   print("Total:",total)
   choice = menu.getUChoiceCartMenu()
-  if(choice==2):
+  if choice == 2:
     cart.clear()
+  elif choice == 1:
+    if customer == None:
+      print("ERROR: You must be logged in before checking out a book.")
+    else:
+      doCheckOut(customer, cart)
 
-def doBookSearch():
+def doCheckOut(customer, cart):
+  choice = util.getValidIntInput("""Checkout options
+  1. Use default billing and shipping info 
+  2. Use different billing and shipping info
+  3. Add new billing and shipping info
+  0. Return to previous menu
+  Choice:""",0,3)
+
+  bsId = None
+  if choice == 0:
+    return
+  elif choice == 1:
+    bsi = db.getBillingShipping(customer[0],True)
+    bsId = bsi[0][0]
+  elif choice == 2:
+    bsilist = db.getBillingShipping(customer[0],False)
+    table = PrettyTable([
+      "BSID","Address Line 1","Address Line 2",
+      "City","Province/State","Country","Postal Code",
+      "Card No.","Exp.","CCN","Card Name"
+    ])
+    for bsi in bsilist:
+      table.add_row(bsi[:11])
+    bsId = util.getValidIntInput("Select BSID:")
+  elif choice == 3:
+    bsId = addBillingAndShipping(customer)
+  
+  orderId = db.addCustomerOrder(bsId,customer[0],cart)
+  print("Order id:", orderId)
+
+
+
+def doBookSearch(cart, customer):
   searchChoice = menu.getUChoiceSearchColl()
 
   books = []
@@ -70,23 +117,24 @@ def doBookSearch():
     range = menu.getUChoiceRange("Stock")
     books = db.searchBooksByStockRange(range[0],range[1])
 
-  printSelectBooks(books)
+  printSelectBooks(books, cart, customer)
 
 def doLoginOrRegister():
   choice = menu.getUChoiceMakeAcctLogIn()
   uname = input("User name:")
   password = getpass.getpass("Password:")
+  customer = None
   if choice == 2:
     customer = db.getCustomer(uname)
     if customer == None:
-      print("Invalid login.")
+      print("ERROR:Invalid login!")
     else:
       vfyPassword = customer[2]
       if security.vfyPassword(password, vfyPassword) == False:
         customer = None
-        print("Invalid login!")
+        print("ERROR:Invalid login!")
       else:
-        print("You are now logged in as", uname)
+        print("You are now logged in as:",uname)
   elif choice == 1:
     email = input("Email:")
     lname = input("Last name:")
@@ -95,32 +143,39 @@ def doLoginOrRegister():
     customer = db.getCustomer(uname)
     if customer != None:
       print("Account succesfully created. Please enter billing information.")
-      addressl1 = input("Address line 1:")
-      addressl2 = input("Address line 2:")
-      city = input("City:")
-      provst = input("Province/State:")
-      country = input("Country:")
-      pcode = input("Postal code:")
-      ccardno = input("Credit card number:")
-      ccexp = input("Credit card expiration (MMYY):")
-      ccn = input("CCN:")
-      ccname = input("Name on the credit card:")
-      db.addBillingShipping(customer[0],True,addressl1,addressl2,city,provst,country,pcode,ccardno,ccexp,ccn,ccname)
+      addBillingAndShipping(customer)
+  
+  return customer
 
+def addBillingAndShipping(customer:str):
+  addressl1 = input("Address line 1:")
+  addressl2 = input("Address line 2:")
+  city = input("City:")
+  provst = input("Province/State:")
+  country = input("Country:")
+  pcode = input("Postal code:")
+  ccardno = input("Credit card number:")
+  ccexp = input("Credit card expiration (MMYY):")
+  ccn = input("CCN:")
+  ccname = input("Name on the credit card:")
+  bsid = db.addBillingShipping(customer[0],True,addressl1,addressl2,city,provst,country,pcode,ccardno,ccexp,ccn,ccname)
+  return bsid
 
-while True:
-  choice = menu.getUChoiceMainMenu()
-  if choice == 0:
-    exit()
-  elif choice == 1:
-    books = db.getAllBooks()
-    printSelectBooks(books)
-  elif choice == 2:
-    doBookSearch()
-  elif choice == 3:
-    printCart(cart)
-  elif choice == 4:
-    doLoginOrRegister()
+def main():
+  cart = []
+  customer = None
+  while True:
+    choice = menu.getUChoiceMainMenu()
+    if choice == 0:
+      exit()
+    elif choice == 1:
+      books = db.getAllBooks()
+      printSelectBooks(books, cart, customer)
+    elif choice == 2:
+      doBookSearch(cart, customer)
+    elif choice == 3:
+      printCart(cart, customer)
+    elif choice == 4:
+      customer = doLoginOrRegister()
 
-
-
+main()
