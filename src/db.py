@@ -1,7 +1,7 @@
 import psycopg2
 import os
 
-BOOK_SELECT="""SELECT b.bookId, b.isbn, b.author, b.title, b.genre, b.price, b.stock, p.pubname
+BOOK_SELECT="""SELECT b.bookId, b.isbn, b.author, b.title, b.genre, b.price, b.stock, b.nopages, p.pubname
     FROM book as b JOIN publisher as p ON b.pubId=p.pubId """
 
 def getConn():

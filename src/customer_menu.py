@@ -1,18 +1,10 @@
 #This module provides user interface to console
 
-def getUChoiceInputInt(message, min=0, max=9999)->int :
-  while True:
-    try:
-      val = int(input(message))
-      if int(val) >= min and int(val) <=max:
-        return val
-      else:
-        print ("Invalid choice")
-    except:
-      print("Not a valid integer")
+import util as util
+
 
 def getUChoiceCartMenu()->int:
-  choice = getUChoiceInputInt("""Choose an option:
+  choice = util.getValidIntInput("""Choose an option:
   1. Checkout
   2. Clear cart
   0. Return to previous menu
@@ -20,7 +12,7 @@ def getUChoiceCartMenu()->int:
   return choice
 
 def getUChoiceBookViewMenu()->int :
-  choice = getUChoiceInputInt("""Choose an option:
+  choice = util.getValidIntInput("""Choose an option:
   1. Add book to cart by id
   2. View book by id
   0. Return to previous menu
@@ -28,7 +20,7 @@ def getUChoiceBookViewMenu()->int :
   return choice
 
 def getUChoiceMainMenu()->int :
-  choice = getUChoiceInputInt("""Hello! Choose an option:
+  choice = util.getValidIntInput("""Hello! Choose an option:
   1. See all available books
   2. Search collection by title, author, etc.
   3. View cart
@@ -40,7 +32,7 @@ def getUChoiceMainMenu()->int :
    
 
 def getUChoiceSearchColl()->int :
-  choice = getUChoiceInputInt("""Choose search parameters, one number or multiple separated by space:
+  choice = util.getValidIntInput("""Choose search parameters, one number or multiple separated by space:
   1. by ISBN
   2. by author
   3. by title
@@ -53,7 +45,7 @@ def getUChoiceSearchColl()->int :
   return choice
 
 def getUChoiceMakeAcctLogIn()->int :
-  choice = getUChoiceInputInt("""What would you like to do?
+  choice = util.getValidIntInput("""What would you like to do?
   1. Make a new account
   2. Log in with existing account
   0. return to previous menu 

@@ -2,26 +2,24 @@ import customer_menu as menu
 import db
 import security
 import getpass
+import util
 from prettytable import PrettyTable
 
 cart = []
 customer = None
 
 def printBook(book):
-  printBookList([book])
+  printSelectBooks([book])
 
-def printOrder(oNum:int , shipAddress:str, billAddress:str, name:str, trackingInfo:str, cost:int, datePlaced:str):
-  print(str(oNum) + "\t" + shipAddress + "\t" + billAddress + "\t" + name + "\t" + trackingInfo + "\t" + "$" + str(cost) + datePlaced)
+#def printOrder(oNum:int , shipAddress:str, billAddress:str, name:str, trackingInfo:str, cost:int, datePlaced:str):
+#  print(str(oNum) + "\t" + shipAddress + "\t" + billAddress + "\t" + name + "\t" + trackingInfo + "\t" + "$" + str(cost) + datePlaced)
   
 
-def printBookList(books):
-    table = PrettyTable(["Book ID","ISBN","Author","Title","Genre","Price","Stock","Publisher"])
-    for row in books:
-      table.add_row(row[:8])
-    print(table)
+def printSelectBooks(books):
+    util.printBookList(books)
     choice = menu.getUChoiceBookViewMenu()
     if choice == 1 or choice == 2:
-      bookId = menu.getUChoiceInputInt("Enter book id:")
+      bookId = util.getValidIntInput("Enter book id:")
       selected = None
       for book in books:
         if book[0] == bookId:
@@ -32,7 +30,7 @@ def printBookList(books):
           printBook(selected)
         if choice == 1:
           stock = selected[6]
-          quantity = menu.getUChoiceInputInt("Enter quantity:",1,stock)
+          quantity = util.getValidIntInput("Enter quantity:",1,stock)
           for i in range(quantity):
             cart.append(selected)
           print("Book added to cart.")
@@ -72,7 +70,7 @@ def doBookSearch():
     range = menu.getUChoiceRange("Stock")
     books = db.searchBooksByStockRange(range[0],range[1])
 
-  printBookList(books)
+  printSelectBooks(books)
 
 def doLoginOrRegister():
   choice = menu.getUChoiceMakeAcctLogIn()
@@ -116,7 +114,7 @@ while True:
     exit()
   elif choice == 1:
     books = db.getAllBooks()
-    printBookList(books)
+    printSelectBooks(books)
   elif choice == 2:
     doBookSearch()
   elif choice == 3:
