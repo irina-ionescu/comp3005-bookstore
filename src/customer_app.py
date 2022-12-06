@@ -4,6 +4,7 @@ import security
 import getpass
 import util
 from prettytable import PrettyTable
+import psycopg2
 
 
 
@@ -144,22 +145,26 @@ def doLoginOrRegister():
     if customer != None:
       print("Account succesfully created. Please enter billing information.")
       addBillingAndShipping(customer)
-  
   return customer
 
 def addBillingAndShipping(customer:str):
-  addressl1 = input("Address line 1:")
-  addressl2 = input("Address line 2:")
-  city = input("City:")
-  provst = input("Province/State:")
-  country = input("Country:")
-  pcode = input("Postal code:")
-  ccardno = input("Credit card number:")
-  ccexp = input("Credit card expiration (MMYY):")
-  ccn = input("CCN:")
-  ccname = input("Name on the credit card:")
-  bsid = db.addBillingShipping(customer[0],True,addressl1,addressl2,city,provst,country,pcode,ccardno,ccexp,ccn,ccname)
-  return bsid
+  while True:
+    try:
+      addressl1 = input("Address line 1:")
+      addressl2 = input("Address line 2:")
+      city = input("City:")
+      provst = input("Province/State:")
+      country = input("Country:")
+      pcode = input("Postal code:")
+      ccardno = input("Credit card number:")
+      ccexp = input("Credit card expiration (MMYY):")
+      ccn = input("CCN:")
+      ccname = input("Name on the credit card:")
+      bsid = db.addBillingShipping(customer[0],True,addressl1,addressl2,city,provst,country,pcode,ccardno,ccexp,ccn,ccname)
+      print("Good news! Account created.")
+      return bsid
+    except psycopg2.Error as e:
+      print(e.pgerror)
 
 def main():
   cart = []
