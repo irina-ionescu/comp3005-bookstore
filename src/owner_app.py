@@ -41,13 +41,19 @@ def getBookToAddValidInput()->list:
     print("Not a valid input")
     
     
-def addPublisher():
+def addNewPublisher():
   #TODO catch pubname not unique exception from db
-  publisher = []
+  while True:
+    try:
+      publisher = []
+      publisher = getPublisherToAddValidInput()
+      pubId = db.addPublisher(publisher[0], publisher[1], publisher[2], publisher[3], publisher[4])
+      print("Success! Publisher with id {} was inserted in the database.".format(pubId))
+      return
+    except psycopg2.Error as e:
+      print(e.pgerror)
 
-
-
-def getValidPublisherToAddInput()->list:
+def getPublisherToAddValidInput()->list:
   publisher = []
   try:
     pubName = input("Publisher name (must be unique): ")
@@ -56,7 +62,7 @@ def getValidPublisherToAddInput()->list:
     pubAddress = input("Address: ")
     phoneNo = input("Phone number: ")
     if pubName != "" and pubEmail != "" and bankAcctNo != "" :
-      publisher.extend(pubName, pubEmail, bankAcctNo, pubAddress, phoneNo)
+      publisher.extend((pubName, pubEmail, bankAcctNo, pubAddress, phoneNo))
     return publisher
   except:
     print("Not a valid input")
@@ -72,8 +78,4 @@ while True:
   elif choice == 2:
     addNewBook()
   elif choice == 5:
-    try:
-      pubId = db.addPublisher('Agora', 'info@agora.ca', 'RBC 101131555', '123 Hazeldean Rd. Kanata', '(613) 555-1234')
-      print(pubId)
-    except psycopg2.Error as e:
-      print(e.pgerror)
+    addNewPublisher()
