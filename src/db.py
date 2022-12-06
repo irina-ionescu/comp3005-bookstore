@@ -119,7 +119,12 @@ def addBillingShipping(cNumber, isPrimary, addressl1, addressl2, city, provst, c
   query = "INSERT INTO BillingShippingInfo (bsid, addressl1, addressl2, city, provst, country, pcode, ccardno, exp, ccn, ccname) "
   query += "VALUES (DEFAULT, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) returning bsid"
   cur.execute(query, (addressl1, addressl2, city, provst, country, pcode, ccardno, exp, ccn, ccname))
-  bsid = cur.fetchone()[0]
+  
+  bsid = None
+
+  res = cur.fetchone()
+  if res != None:
+    bsid = res[0]
 
   query = "INSERT INTO BSIDirectory (bsid, cnumber, isprimary) VALUES (%s, %s, %s)"
   cur.execute(query, (bsid, cNumber, isPrimary))
@@ -129,13 +134,32 @@ def addBillingShipping(cNumber, isPrimary, addressl1, addressl2, city, provst, c
   conn.close()
   return bsid
 
-#gets publisher id by name
+#gets publisher id by name, returns publisher id (id, None)
+def addPublisher(pubname:str, pubemail:str, bankacctNo:str, pubaddress:str, phoneno:str):
+  conn = getConn()
+  cur = conn.cursor()
+  query = "INSERT INTO Publisher (pubid, pubname, pubemail, bankacctno, pubaddress, phoneno) "
+  query += "VALUES (DEFAULT, %s, %s, %s, %s, %s) returning pubid"
+  cur.execute(query, (pubname, pubemail, bankacctNo, pubaddress, phoneno) )
+  pubId = None
+  res = cur.fetchone()
+  if res != None:
+    pubId = res[0]
+  conn.commit()
+  cur.close()
+  conn.close()
+  return pubId
+
+#gets publisher id by name, returns publisher id  (id, None)
 def getPublisherId(name)->int:
   conn = getConn()
   cur = conn.cursor()
   query = "SELECT pubid FROM Publisher WHERE pubname LIKE %s"
   cur.execute(query, (name,))
-  pubId = cur.fetchone()
+  res = cur.fetchone()
+  pubId = None
+  if res != None:
+    pubId = res[0]
   conn.commit()
   cur.close()
   conn.close()
@@ -152,7 +176,11 @@ def addCustomerOrder(bsid,cnumber,cart):
 	VALUES ( DEFAULT, CURRENT_DATE, 'SUBMITTED', %s, %s) returning orderid
   """
   cur.execute(query, (bsid, cnumber))
-  orderid = cur.fetchone()
+  orderid = None
+
+  res = cur.fetchone()
+  if res != None:
+    orderid = res[0]
   
   query = """
   INSERT INTO customerordercontents (
