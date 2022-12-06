@@ -66,7 +66,17 @@ def getPublisherToAddValidInput()->list:
     return publisher
   except:
     print("Not a valid input")
-  
+
+def deleteBook():
+  while True:
+    try:
+      id = int(input("Enter id of book to be deleted: "))
+      db.deleteBookById(id)
+      print ("Success! Deleted book with id {}".format(id))
+      return
+    except psycopg2.Error as e:
+      print ("Invalid input")
+      print(e.pgerror)
 
 while True:
   choice = menu.getOChoiceMainMenu()
@@ -77,5 +87,8 @@ while True:
     listAllBooks(books)
   elif choice == 2:
     addNewBook()
+  elif choice == 3:
+    deleteBook()
   elif choice == 5:
     addNewPublisher()
+  
