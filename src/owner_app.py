@@ -87,20 +87,43 @@ def listAllPublishers():
   except psycopg2.Error as e:
       print ("Invalid input")
 
+def salesVsExpenses():
+  return
 
-while True:
-  choice = menu.getOChoiceMainMenu()
-  if choice == 0:
-    exit()
-  elif choice == 1:
-    books = db.getAllBooks()
-    listAllBooks(books)
-  elif choice == 2:
-    addNewBook()
-  elif choice == 3:
-    deleteBook()
-  elif choice == 4:
-    listAllPublishers()
-  elif choice == 5:
-    addNewPublisher()
+def salesByParam():
+  return
+
+def automatedOrderReport():
+  return
+
+
+def main():
+  while True:
+    choice = menu.getOChoiceMainMenu()
+    if choice == 0:
+      exit()
+    elif choice == 1:
+      books = db.getAllBooks()
+      listAllBooks(books)
+    elif choice == 2:
+      addNewBook()
+    elif choice == 3:
+      deleteBook()
+    elif choice == 4:
+      listAllPublishers()
+    elif choice == 5:
+      addNewPublisher()
+    elif choice == 6:
+      repChoice = menu.getOChoiceReports()
+      if repChoice == 0:
+        continue
+      elif repChoice == 1:
+        salesVsExpenses()
+      elif repChoice == 2:
+        salesByParam()
+      elif repChoice == 3:
+        automatedOrderReport()
+
+if __name__ == "__main__":
+  main()
   

@@ -21,7 +21,7 @@ def getOChoiceReports()->int:
   What would you like to do?
   1. Sales vs. expenditures
   2. Sales by parameter (example: author, genre, ...)
-  3. Get orders placed to publishers
+  3. Summary of automated orders sent to publishers
   0. Return to previous menu 
   Choice: """, 0,3)
   return choice
