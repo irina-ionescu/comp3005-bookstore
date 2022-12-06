@@ -4,7 +4,9 @@ import util as util
 
 
 def getUChoiceCartMenu()->int:
-  choice = util.getValidIntInput("""Choose an option:
+  choice = util.getValidIntInput("""
+  ---------------------------
+  Choose an option:
   1. Checkout
   2. Clear cart
   0. Return to previous menu
@@ -12,7 +14,9 @@ def getUChoiceCartMenu()->int:
   return choice
 
 def getUChoiceBookViewMenu()->int :
-  choice = util.getValidIntInput("""Choose an option:
+  choice = util.getValidIntInput("""
+  ---------------------------
+  Choose an option:
   1. Add book to cart by id
   2. View book by id
   0. Return to previous menu
@@ -34,7 +38,9 @@ def getUChoiceMainMenu()->int :
    
 
 def getUChoiceSearchColl()->int :
-  choice = util.getValidIntInput("""Choose search parameters, one number or multiple separated by space:
+  choice = util.getValidIntInput("""
+  ---------------------------
+  Choose search parameters, one number or multiple separated by space:
   1. By ISBN
   2. By author
   3. By title
@@ -47,7 +53,9 @@ def getUChoiceSearchColl()->int :
   return choice
 
 def getUChoiceMakeAcctLogIn()->int :
-  choice = util.getValidIntInput("""What would you like to do?
+  choice = util.getValidIntInput("""
+  ---------------------------
+  What would you like to do?
   1. Make a new account
   2. Log in with existing account
   0. Return to previous menu 
