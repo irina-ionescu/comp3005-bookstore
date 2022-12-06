@@ -25,6 +25,15 @@ def getAllBooks():
   conn.close()
   return rows
 
+def getAllPublishers():
+  conn = getConn()
+  cur = conn.cursor()
+  cur.execute("SELECT * FROM Publisher")
+  rows = cur.fetchall()
+  cur.close()
+  conn.close()
+  return rows
+
 def searchBooksByText(ISBN=None,author=None,title=None,genre=None,publisher=None):
   conn = getConn()
   cur = conn.cursor()

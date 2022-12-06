@@ -21,8 +21,7 @@ def addNewBook():
   book.append(pubId)
   db.addBook(book[0], book[1], book[2], book[3], book[4], book[5], book[6], book[7], book[8])
     
-
-
+#helper function to get input for adding book    
 def getBookToAddValidInput()->list:
   book = []
   try:
@@ -78,6 +77,17 @@ def deleteBook():
       print ("Invalid input")
       print(e.pgerror)
 
+def listAllPublishers():
+  try:
+    table = PrettyTable(["PubId", "Name", "Email", "Bank Account No", "Address", "Phone No"])
+    publishers = db.getAllPublishers()
+    for row in publishers:
+      table.add_row(row)
+    print(table)
+  except psycopg2.Error as e:
+      print ("Invalid input")
+
+
 while True:
   choice = menu.getOChoiceMainMenu()
   if choice == 0:
@@ -89,6 +99,8 @@ while True:
     addNewBook()
   elif choice == 3:
     deleteBook()
+  elif choice == 4:
+    listAllPublishers()
   elif choice == 5:
     addNewPublisher()
   
