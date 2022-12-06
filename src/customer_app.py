@@ -183,4 +183,5 @@ def main():
     elif choice == 4:
       customer = doLoginOrRegister()
 
-main()
+if __name__ == "__main__":
+  main()
