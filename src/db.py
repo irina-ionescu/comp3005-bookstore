@@ -219,9 +219,3 @@ def getCustomerOrder(orderId,cNumber):
   conn.close()
   return order
 
-  
-
-#deleteBookById(15)
-#addBook("1234-5678-9103", "Irina Ionescu", "Adventures in Postgres", "Drama", 1, 10000.01, 100, 1, 4 )
-#addCustomer("dippy", "402375329.N3ZnpkqkIQ1EI5aZ3h7WB66b7d1-VKgFd_3-XCmsWsw=", "dippy@kittyworld.com", "Dot", "Dippin")
-#addBillingShipping(1, True, "123 Any Street", None, "Whoville", "FL", "North Pole", "111111", "123456789", "0101", "123", "Mr. Grinch")

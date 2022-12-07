@@ -76,28 +76,36 @@ def checkOut(customer, cart):
   3. Add new billing and shipping info
   0. Return to previous menu
   Choice:""",0,3)
-
-  bsId = None
-  if choice == 0:
-    return
-  elif choice == 1:
-    bsi = db.getBillingShipping(customer[0],True)
-    bsId = bsi[0][0]
-  elif choice == 2:
-    bsilist = db.getBillingShipping(customer[0],False)
-    table = PrettyTable([
-      "BSID","Address Line 1","Address Line 2",
-      "City","Province/State","Country","Postal Code",
-      "Card No.","Exp.","CCN","Card Name"
-    ])
-    for bsi in bsilist:
-      table.add_row(bsi[:11])
-    bsId = util.getValidIntInput("Select BSID:")
-  elif choice == 3:
-    bsId = addBillingAndShipping(customer)
   
-  orderId = db.addCustomerOrder(bsId,customer[0],cart)
-  print("Order id:", orderId)
+  try:
+    
+    bsId = None
+    if choice == 0:
+      return
+    elif choice == 1:
+      bsi = db.getBillingShipping(customer[0],True)
+      bsId = bsi[0][0]
+    elif choice == 2:
+      bsilist = db.getBillingShipping(customer[0],False)
+      table = PrettyTable([
+        "BSID","Address Line 1","Address Line 2",
+        "City","Province/State","Country","Postal Code",
+        "Card No.","Exp.","CCN","Card Name"
+      ])
+      for bsi in bsilist:
+        table.add_row(bsi[:11])
+      print(table)
+      bsId = util.getValidIntInput("Select BSID:")
+    elif choice == 3:
+      bsId = addBillingAndShipping(customer)
+
+    orderId = db.addCustomerOrder(bsId,customer[0],cart)
+    cart.clear()
+    print("Order id:", orderId)
+
+  except psycopg2.Error as e:
+    print(e.pgerror)
+
 
 
 
@@ -162,7 +170,7 @@ def addBillingAndShipping(customer:str):
       ccn = input("CCN:")
       ccname = input("Name on the credit card:")
       bsid = db.addBillingShipping(customer[0],True,addressl1,addressl2,city,provst,country,pcode,ccardno,ccexp,ccn,ccname)
-      print("Good news! Account created.")
+      print("New billing and shipping info added.")
       return bsid
     except psycopg2.Error as e:
       print(e.pgerror)
