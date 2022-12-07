@@ -204,6 +204,21 @@ def addCustomerOrder(bsid,cnumber,cart):
   conn.close()
   return orderid
 
+def getCustomerOrder(orderId,cNumber):
+  conn = getConn()
+  cur = conn.cursor()
+  query = """
+  SELECT orderId, oDate, oStatus, fName, lName FROM CustomerOrder as co
+  JOIN Customer as cu ON co.cNumber=cu.cNumber
+  WHERE orderId=%s AND co.cNumber=%s
+  """
+  cur.execute(query, (orderId,cNumber))
+  order = cur.fetchone()
+  conn.commit()
+  cur.close()
+  conn.close()
+  return order
+
   
 
 #deleteBookById(15)

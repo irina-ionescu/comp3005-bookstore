@@ -7,8 +7,14 @@ from prettytable import PrettyTable
 import psycopg2
 
 
-def printBook(book, cart, customer):
-  printSelectBooks([book], cart, customer)
+def printBook(book):
+  util.printBookList([book])
+
+def printOrder(order):
+  table = PrettyTable(["Order ID","Order Date","Order Status"])
+  table.add_row(order[:3])
+  print(table)
+
 
 def printSelectBooks(books, cart, customer):
     util.printBookList(books)
@@ -22,7 +28,7 @@ def printSelectBooks(books, cart, customer):
           break
       if selected:
         if choice == 2:
-          printBook(selected, cart, customer)
+          printBook(selected)
         if choice == 1:
           cartItem = None
           cartQuantity = 0
@@ -61,9 +67,9 @@ def printCart(cart, customer):
     if customer == None:
       print("ERROR: You must be logged in before checking out a book.")
     else:
-      doCheckOut(customer, cart)
+      checkOut(customer, cart)
 
-def doCheckOut(customer, cart):
+def checkOut(customer, cart):
   choice = util.getValidIntInput("""Checkout options
   1. Use default billing and shipping info 
   2. Use different billing and shipping info
@@ -95,7 +101,7 @@ def doCheckOut(customer, cart):
 
 
 
-def doBookSearch(cart, customer):
+def searchBook(cart, customer):
   searchChoice = menu.getUChoiceSearchColl()
 
   books = []
@@ -115,7 +121,7 @@ def doBookSearch(cart, customer):
 
   printSelectBooks(books, cart, customer)
 
-def doLoginOrRegister():
+def loginOrRegister():
   choice = menu.getUChoiceMakeAcctLogIn()
   uname = input("User name:")
   password = getpass.getpass("Password:")
@@ -161,6 +167,20 @@ def addBillingAndShipping(customer:str):
     except psycopg2.Error as e:
       print(e.pgerror)
 
+def trackOrder(customer):
+  if customer==None:
+    print("ERROR: You must be logged in to view your orders")
+    return
+  orderId = util.getValidIntInput("Order id:",0)
+  try:
+    order = db.getCustomerOrder(orderId,customer[0])
+    if order==None:
+      print("ERROR: Order not found.")
+      return
+    printOrder(order)
+  except psycopg2.Error as e:
+    print(e.pgerror)
+
 def main():
   cart = []
   customer = None
@@ -172,11 +192,13 @@ def main():
       books = db.getAllBooks()
       printSelectBooks(books, cart, customer)
     elif choice == 2:
-      doBookSearch(cart, customer)
+      searchBook(cart, customer)
     elif choice == 3:
       printCart(cart, customer)
     elif choice == 4:
-      customer = doLoginOrRegister()
+      customer = loginOrRegister()
+    elif choice == 5:
+      trackOrder(customer)
 
 if __name__ == "__main__":
   main()
