@@ -5,7 +5,7 @@ import psycopg2
 from prettytable import PrettyTable
 
 #This is the application that can be run by the store owners.
-#It allows adding/removing new books, generating reports, 
+#It allows adding/removing new books, generating reports
 
 def listAllBooks(books):
   util.printBookList(books)
