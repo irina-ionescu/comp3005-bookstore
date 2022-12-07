@@ -7,13 +7,8 @@ from prettytable import PrettyTable
 import psycopg2
 
 
-
-def printBook(book):
-  printSelectBooks([book])
-
-#def printOrder(oNum:int , shipAddress:str, billAddress:str, name:str, trackingInfo:str, cost:int, datePlaced:str):
-#  print(str(oNum) + "\t" + shipAddress + "\t" + billAddress + "\t" + name + "\t" + trackingInfo + "\t" + "$" + str(cost) + datePlaced)
-  
+def printBook(book, cart, customer):
+  printSelectBooks([book], cart, customer)
 
 def printSelectBooks(books, cart, customer):
     util.printBookList(books)
@@ -27,7 +22,7 @@ def printSelectBooks(books, cart, customer):
           break
       if selected:
         if choice == 2:
-          printBook(selected)
+          printBook(selected, cart, customer)
         if choice == 1:
           cartItem = None
           cartQuantity = 0
