@@ -199,6 +199,10 @@ def addCustomerOrder(bsid,cnumber,cart):
   for book in cart:
     cur.execute(query,(book[0],orderid,book[6]))
 
+  #update stock
+  query = "UPDATE Book SET stock = %s WHERE bookId = %s"
+  cur.execute(query,(book[6],book[0]))
+
   conn.commit()
   cur.close()
   conn.close()
