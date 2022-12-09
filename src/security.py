@@ -1,6 +1,7 @@
 import hashlib
 import base64
 import uuid
+#this module contains functions for password hashing and verification
 
 def hash(password, salt):
     sha = hashlib.sha256()
