@@ -122,6 +122,20 @@ CREATE TABLE if not exists SupplyOrder (
     REFERENCES Book(bookId)
 );
 
+CREATE OR REPLACE FUNCTION insert_supply_order()
+	RETURNS trigger AS $insert_supply_order$
+	BEGIN
+		IF NEW.stock < 10 THEN
+			INSERT INTO supplyorder(supid, supdate, quantity, pubid, bookid)
+			VALUES (DEFAULT, CURRENT_DATE, 10, NEW.pubId, NEW.bookId);
+		END IF;
+		RETURN NEW;
+	END;
+$insert_supply_order$ LANGUAGE plpgsql
+
+CREATE TRIGGER insert_supply_order AFTER UPDATE ON book
+    FOR EACH ROW EXECUTE FUNCTION insert_supply_order();
+
 INSERT INTO BillingShippingInfo(
 	bsId,addressL1, addressL2, city, provSt, country, pCode, ccardNo, exp, ccn, ccName)
 	VALUES (DEFAULT,'1 Sycamore Dr.', NULL, 'Springfield', 'CA', 'US', '700123', '1234-5678-9012', '0124', '123', 'John Smith');
