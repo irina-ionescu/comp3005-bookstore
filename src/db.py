@@ -64,6 +64,34 @@ def searchBooksByStockRange(minStock,maxStock):
   conn.close()
   return rows
 
+#returns sales by parameter from book, publisher and customerordercontents
+def getSalesByParam(paramType:str, value):
+  conn = getConn()
+  cur = conn.cursor()
+
+  if paramType not in ["b.title","b.bookId","b.author", "b.genre","p.pubname"]:
+    raise Exception("Invalid param type")
+  
+  query = """SELECT {0}, sum(quantity*price) 
+  FROM customerordercontents as c 
+  JOIN book as b on b.bookid = c.bookid
+  JOIN publisher as p on b.pubId = p.pubId
+  WHERE {0} = %s GROUP BY {0}""".format(paramType)
+  cur.execute(query, (value,))
+  rows = cur.fetchall()
+  cur.close()
+  conn.close()
+  return rows
+
+def getSalesLastMonthByBook(bookId):
+  conn = getConn()
+  cur = conn.cursor()
+  query = '''SELECT '''
+  cur.execute(query, (bookId,))
+  rows = cur.fetchall()
+  cur.close()
+  conn.close()
+
 def deleteBookById(bookId):
   conn = getConn()
   cur = conn.cursor()

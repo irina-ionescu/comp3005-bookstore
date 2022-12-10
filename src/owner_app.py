@@ -18,6 +18,7 @@ def addNewBook():
     if pubId != None:
       break
   book = getBookToAddValidInput()
+
   book.append(pubId)
   db.addBook(book[0], book[1], book[2], book[3], book[4], book[5], book[6], book[7], book[8])
     
@@ -91,7 +92,77 @@ def salesVsExpenses():
   return
 
 def salesByParam():
-  return
+  choice = util.getValidIntInput("""Get sales by:
+  1. Book title
+  2. Book id
+  3. Author
+  4. Genre 
+  5. Publisher
+  Choice: """, 1, 5)
+  if choice == 1:
+    try:
+      paramType = "b.title"
+      value = input("Enter book title: ")
+      rows = db.getSalesByParam(paramType, value)
+      table = PrettyTable(["Title", "Total Sales" ])
+      for row in rows:
+        table.add_row(row)
+      print(table)
+      return
+    except psycopg2.Error as e:
+      print(e.pgerror)
+  
+  if choice == 2:
+    try:
+      paramType = "b.bookId"
+      value = input("Enter book id: ")
+      rows = db.getSalesByParam(paramType, value)
+      table = PrettyTable(["Book Id", "Total Sales" ])
+      for row in rows:
+        table.add_row(row)
+      print(table)
+      return 
+    except psycopg2.Error as e:
+      print(e.pgerror)
+  
+  if choice == 3:
+    try:
+      paramType = "b.author"
+      value = input("Enter author: ")
+      rows = db.getSalesByParam(paramType, value)
+      table = PrettyTable(["Author", "Total Sales" ])
+      for row in rows:
+        table.add_row(row)
+      print(table)
+      return 
+    except psycopg2.Error as e:
+      print(e.pgerror)
+    
+  if choice == 4:
+    try:
+      paramType = "b.genre"
+      value = input("Enter genre: ")
+      rows = db.getSalesByParam(paramType, value)
+      table = PrettyTable(["Genre", "Total Sales" ])
+      for row in rows:
+        table.add_row(row)
+      print(table)
+      return 
+    except psycopg2.Error as e:
+      print(e.pgerror)
+  
+  if choice == 5:
+    try:
+      paramType = "p.pubname"
+      value = input("Enter publisher name: ")
+      rows = db.getSalesByParam(paramType, value)
+      table = PrettyTable(["Publisher", "Total Sales" ])
+      for row in rows:
+        table.add_row(row)
+      print(table)
+      return 
+    except psycopg2.Error as e:
+      print(e.pgerror)
 
 def automatedOrderReport():
   return
@@ -123,6 +194,7 @@ def main():
         salesByParam()
       elif repChoice == 3:
         automatedOrderReport()
+    
 
 if __name__ == "__main__":
   main()
