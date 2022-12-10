@@ -228,7 +228,7 @@ def addCustomerOrder(bsid,cnumber,cart):
     cur.execute(query,(book[0],orderid,book[6]))
 
   #update stock
-  query = "UPDATE Book SET stock = %s WHERE bookId = %s"
+  query = "UPDATE Book SET stock = stock - %s WHERE bookId = %s"
   cur.execute(query,(book[6],book[0]))
 
   conn.commit()

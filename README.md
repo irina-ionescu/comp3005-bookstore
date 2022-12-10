@@ -16,8 +16,10 @@ This is a sample bookstore application.
 ## Setup
 - Environment variables for PGUSER, PGPORT (run pg_env.sh from the Postgres installation directory)
 - Add an environment variable for the postgres user PGPASS in ~/.bash_rc or ~/.bash_profile and load in bash with source
+- Create a database named Bookstore
+- Execute the create.sql (this will also create the trigger in trigger.sql)
 
-## File structure:
+## Folder structure:
 
 
 ## Run customer app:
