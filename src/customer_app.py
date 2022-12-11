@@ -6,19 +6,21 @@ import util
 from prettytable import PrettyTable
 import psycopg2
 
-
+#prints a single book
 def printBook(book):
   util.printBookList([book])
 
+#prints an order in a table form
 def printOrder(order):
   table = PrettyTable(["Order ID","Order Date","Order Status"])
   table.add_row(order[:3])
   print(table)
 
-
+#prints the selected books in table form and allows further operations such as adding to cart
 def printSelectBooks(books, cart, customer):
     util.printBookList(books)
     choice = menu.getUChoiceBookViewMenu()
+    #user can select a book to add it to cart or display information
     if choice == 1 or choice == 2:
       bookId = util.getValidIntInput("Enter book id:")
       selected = None
@@ -29,7 +31,7 @@ def printSelectBooks(books, cart, customer):
       if selected:
         if choice == 2:
           printBook(selected)
-        if choice == 1:
+        if choice == 1: #book added to cart
           cartItem = None
           cartQuantity = 0
           for item in cart:
@@ -48,6 +50,7 @@ def printSelectBooks(books, cart, customer):
           print("Book added to cart.")
           printCart(cart, customer)
 
+#prints the contents of the cart
 def printCart(cart, customer):
   if len(cart) == 0:
     print("Cart is empty.")
@@ -69,6 +72,7 @@ def printCart(cart, customer):
     else:
       checkOut(customer, cart)
 
+#execute checkout - adds an order and clears the cart
 def checkOut(customer, cart):
   choice = util.getValidIntInput("""Checkout options
   1. Use default billing and shipping info 
@@ -82,10 +86,10 @@ def checkOut(customer, cart):
     bsId = None
     if choice == 0:
       return
-    elif choice == 1:
+    elif choice == 1: #get the default BSI entry associated with this customer
       bsi = db.getBillingShipping(customer[0],True)
       bsId = bsi[0][0]
-    elif choice == 2:
+    elif choice == 2: #get all the BSI entries associated with this customers so they may choose one
       bsilist = db.getBillingShipping(customer[0],False)
       table = PrettyTable([
         "BSID","Address Line 1","Address Line 2",
@@ -96,9 +100,9 @@ def checkOut(customer, cart):
         table.add_row(bsi[:11])
       print(table)
       bsId = util.getValidIntInput("Select BSID:")
-    elif choice == 3:
+    elif choice == 3: #allow the customer to add a new BSI entry
       bsId = addBillingAndShipping(customer)
-
+    #add the order to the table and return the order id
     orderId = db.addCustomerOrder(bsId,customer[0],cart)
     cart.clear()
     print("Order id:", orderId)
@@ -106,9 +110,7 @@ def checkOut(customer, cart):
   except psycopg2.Error as e:
     print(e.pgerror)
 
-
-
-
+#searches a book by a partial attribute match or an attribute range
 def searchBook(cart, customer):
   searchChoice = menu.getUChoiceSearchColl()
 
@@ -117,7 +119,8 @@ def searchBook(cart, customer):
     return
   elif searchChoice < 6: #text searches allowing for partial matches
     textAttr = ["ISBN","Author","Title","Genre","Publisher"]
-    searchVals = ["","","","",""]
+    searchVals = ["","","","",""] 
+    #add % at the beggining and the end of the string to perform a partial match using LIKE
     searchVals[searchChoice-1] = "%" + input(textAttr[searchChoice-1]+" (partial) :") + "%"
     books = db.searchBooksByText(searchVals[0],searchVals[1],searchVals[2], searchVals[3], searchVals[4])
   elif searchChoice == 6: #price range
@@ -126,9 +129,10 @@ def searchBook(cart, customer):
   elif searchChoice == 7: #stock range
     range = menu.getUChoiceRange("Stock")
     books = db.searchBooksByStockRange(range[0],range[1])
-
+  #print the results
   printSelectBooks(books, cart, customer)
 
+#login with an existing account or create a new one
 def loginOrRegister():
   choice = menu.getUChoiceMakeAcctLogIn()
   if choice == 0:
@@ -158,6 +162,7 @@ def loginOrRegister():
       addBillingAndShipping(customer)
   return customer
 
+#add a new BSI entry associated with the provided customer
 def addBillingAndShipping(customer:str):
   while True:
     try:
@@ -177,6 +182,7 @@ def addBillingAndShipping(customer:str):
     except psycopg2.Error as e:
       print(e.pgerror)
 
+#returns the status for the provided order id
 def trackOrder(customer):
   if customer==None:
     print("ERROR: You must be logged in to view your orders")
@@ -191,6 +197,7 @@ def trackOrder(customer):
   except psycopg2.Error as e:
     print(e.pgerror)
 
+#main 
 def main():
   cart = []
   customer = None

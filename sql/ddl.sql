@@ -1,5 +1,5 @@
 --This file is for grading purposes only
-
+-- Stores billing and shipping information
 CREATE TABLE if not exists BillingShippingInfo (
   bsId serial,
   addressL1 varchar (100) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE if not exists BillingShippingInfo (
   
   PRIMARY KEY (bsId)	 
 );
-
+-- Stores customer entries
 CREATE TABLE if not exists Customer (
     cNumber serial,
   	uname varchar(50) UNIQUE NOT NULL,
@@ -27,6 +27,7 @@ CREATE TABLE if not exists Customer (
   PRIMARY KEY (cNumber)
 );
 
+-- Stores the relation from customer records to billing and shipping information entries
 CREATE TABLE if not exists bsiDirectory (
   bsId int NOT NULL,
   cNumber int NOT NULL,
@@ -40,6 +41,7 @@ CREATE TABLE if not exists bsiDirectory (
   
 );
 
+-- Stores publisher information
 CREATE TABLE if not exists Publisher (
 	pubId serial,
   pubName varchar (50) NOT NULL UNIQUE,
@@ -51,6 +53,7 @@ CREATE TABLE if not exists Publisher (
   PRIMARY KEY (pubId)	 
 );
 
+-- Stores book information
 CREATE TABLE if not exists Book (
   bookId serial,
 	ISBN varchar (20) UNIQUE NOT NULL,
@@ -68,7 +71,7 @@ CREATE TABLE if not exists Book (
 		REFERENCES Publisher(pubId)
 );
 
-
+-- Stores customer orders
 CREATE TABLE if not exists CustomerOrder (
   orderId serial,
   oDate date NOT NULL,
@@ -84,6 +87,7 @@ CREATE TABLE if not exists CustomerOrder (
 
 );
 
+-- Stores the relation between customer orders and books
 CREATE TABLE if not exists customerOrderContents (
   bookId int NOT NULL,
   orderId int NOT NULL,
@@ -96,6 +100,7 @@ CREATE TABLE if not exists customerOrderContents (
     REFERENCES CustomerOrder(orderId)
 );
 
+-- Stores supply order entries
 CREATE TABLE if not exists SupplyOrder (
   supId serial,
   supDate date NOT NULL,

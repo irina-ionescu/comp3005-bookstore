@@ -1,5 +1,5 @@
 -- This file is for grading purposes only
-
+-- This is sample data
 INSERT INTO BillingShippingInfo(
 	bsId,addressL1, addressL2, city, provSt, country, pCode, ccardNo, exp, ccn, ccName)
 	VALUES (DEFAULT,'1 Sycamore Dr.', NULL, 'Springfield', 'CA', 'US', '700123', '1234-5678-9012', '0124', '123', 'John Smith');
@@ -68,17 +68,3 @@ INSERT INTO Book(
 	bookId, ISBN, author, title, genre, stock, price, percentRoyalty, noPages, pubId)
 	VALUES (DEFAULT, '0001-0002-0003', 'Rick Silva', 'Essential Postgres', 'Technical', 2, 39.05, 5, 90, 4);
 
-
-
-DELETE FROM Book WHERE bookId=<value>
-
-
-INSERT INTO customerorder 
-  (orderid, odate, ostatus, bsid, cnumber)
-	VALUES ( DEFAULT, CURRENT_DATE, 'SUBMITTED', <bsidvalue>, <cnumbervalue> ) returning orderid
-
-
-INSERT INTO customerordercontents (bookid, orderid, quantity) VALUES (book.bookId, orderid, book.price)
-
-
-UPDATE Book SET stock = stock - <pricevalue> WHERE bookId = <idvalue>
