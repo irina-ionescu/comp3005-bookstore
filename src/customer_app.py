@@ -131,6 +131,8 @@ def searchBook(cart, customer):
 
 def loginOrRegister():
   choice = menu.getUChoiceMakeAcctLogIn()
+  if choice == 0:
+    return
   uname = input("User name:")
   password = getpass.getpass("Password:")
   customer = None
