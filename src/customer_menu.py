@@ -40,7 +40,7 @@ def getUChoiceMainMenu()->int :
 def getUChoiceSearchColl()->int :
   choice = util.getValidIntInput("""
   ---------------------------
-  Choose search parameters, one number or multiple separated by space:
+  Choose search parameters:
   1. By ISBN
   2. By author
   3. By title

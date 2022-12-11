@@ -118,7 +118,7 @@ def searchBook(cart, customer):
   elif searchChoice < 6: #text searches allowing for partial matches
     textAttr = ["ISBN","Author","Title","Genre","Publisher"]
     searchVals = ["","","","",""]
-    searchVals[searchChoice-1] = "%" + input(textAttr[searchChoice-1]+":") + "%"
+    searchVals[searchChoice-1] = "%" + input(textAttr[searchChoice-1]+" (partial) :") + "%"
     books = db.searchBooksByText(searchVals[0],searchVals[1],searchVals[2], searchVals[3], searchVals[4])
   elif searchChoice == 6: #price range
     range = menu.getUChoiceRange("Price")
