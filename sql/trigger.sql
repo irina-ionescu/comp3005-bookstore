@@ -1,3 +1,5 @@
+-- This file is for grading purposes only
+
 CREATE OR REPLACE FUNCTION insert_supply_order()
 	RETURNS trigger AS $insert_supply_order$
 	DECLARE prevMonthOrders integer;
