@@ -225,10 +225,12 @@ def addCustomerOrder(bsid,cnumber,cart):
 	VALUES (%s, %s, %s);
   """
   for book in cart:
+    #INSERT INTO customerordercontents (bookid, orderid, quantity) VALUES (book.bookId, orderid, book.price)
     cur.execute(query,(book[0],orderid,book[6]))
 
   #update stock
   query = "UPDATE Book SET stock = stock - %s WHERE bookId = %s"
+  #UPDATE Book SET stock = stock - <pricevalue> WHERE bookId = <idvalue>
   cur.execute(query,(book[6],book[0]))
 
   conn.commit()
@@ -251,3 +253,29 @@ def getCustomerOrder(orderId,cNumber):
   conn.close()
   return order
 
+def getSalesVsExpenses():
+  conn = getConn()
+  cur = conn.cursor()
+  query = """SELECT b.price, co.quantity, b.percentRoyalty, b.price * co.quantity as "Total Sales",
+  CAST(b.percentRoyalty AS FLOAT)/100 * b.price * co.quantity as "Expenses"
+  FROM book as b JOIN customerordercontents as co ON b.bookid = co.bookid"""
+  cur.execute(query, ())
+  rows = cur.fetchall()
+  conn.commit()
+  cur.close()
+  conn.close()
+  return rows
+
+def getOrdersToPublishers():
+  conn = getConn()
+  cur = conn.cursor()
+  query = """SELECT s.supid, s.supdate, s.quantity, p.pubname, b.title, b.author
+  FROM supplyorder as s JOIN publisher as p on s.pubid = p.pubid
+  JOIN  book as b on s.bookid = b.bookid """
+  cur.execute(query, ())
+  rows = cur.fetchall()
+  conn.commit()
+  cur.close()
+  conn.close()
+  return rows
+   

@@ -89,6 +89,20 @@ def listAllPublishers():
       print ("Invalid input")
 
 def salesVsExpenses():
+  try:
+    totalSales = 0.0
+    totalExpenses = 0.0
+    table = PrettyTable(["Book Price", "Quantity Sold", "Royalty %", "Total Sales", "Total Expense"])
+    rows = db.getSalesVsExpenses()
+    for row in rows:
+      table.add_row(row)
+      totalSales += row[3]
+      totalExpenses += row[4]
+    print(table)
+    print("Total book sales:", totalSales)
+    print("Total to be paid in royalties:", totalExpenses)
+  except psycopg2.Error as e:
+    print(e.pgerror)  
   return
 
 def salesByParam():
@@ -165,8 +179,15 @@ def salesByParam():
       print(e.pgerror)
 
 def automatedOrderReport():
-  return
-
+  try:
+    rows = db.getOrdersToPublishers()
+    table = PrettyTable(["Supplier Id", "Order Date", "Quantity Ordered", "Publisher Name", "Title", "Author" ])
+    for row in rows:
+      table.add_row(row)
+      print(table)
+    return
+  except psycopg2.Error as e:
+      print(e.pgerror)
 
 def main():
   while True:
