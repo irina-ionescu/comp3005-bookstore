@@ -54,18 +54,3 @@ SELECT orderId, oDate, oStatus, fName, lName FROM CustomerOrder as co
   JOIN Customer as cu ON co.cNumber=cu.cNumber
   WHERE orderId=<orderIdVal> AND co.cNumber=<customerNumberVal>
 
-
--- Deletes book by id
-DELETE FROM Book WHERE bookId=<value>
-
--- Adds a customer order entry during checkout
-INSERT INTO customerorder 
-  (orderid, odate, ostatus, bsid, cnumber)
-	VALUES ( DEFAULT, CURRENT_DATE, 'SUBMITTED', <bsidvalue>, <cnumbervalue> ) returning orderid
-
--- Associates books with a customer order entry during checkout
-INSERT INTO customerordercontents (bookid, orderid, quantity) VALUES (book.bookId, orderid, book.price)
-
--- Updates book stock during checkout
--- Will trigger a supply order when stock is less than 10
-UPDATE Book SET stock = stock - <quantityvalue> WHERE bookId = <idvalue>
