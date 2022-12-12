@@ -1,5 +1,21 @@
 -- This file is for grading purposes only
--- This is sample data
+
+-- Deletes book by id
+DELETE FROM Book WHERE bookId=<value>
+
+-- Adds a customer order entry during checkout
+INSERT INTO customerorder 
+  (orderid, odate, ostatus, bsid, cnumber)
+	VALUES ( DEFAULT, CURRENT_DATE, 'SUBMITTED', <bsidvalue>, <cnumbervalue> ) returning orderid
+
+-- Associates books with a customer order entry during checkout
+INSERT INTO customerordercontents (bookid, orderid, quantity) VALUES (book.bookId, orderid, book.price)
+
+-- Updates book stock during checkout
+-- Will trigger a supply order when stock is less than 10
+UPDATE Book SET stock = stock - <quantityvalue> WHERE bookId = <idvalue>
+
+-- These statements insert sample data into the database
 INSERT INTO BillingShippingInfo(
 	bsId,addressL1, addressL2, city, provSt, country, pCode, ccardNo, exp, ccn, ccName)
 	VALUES (DEFAULT,'1 Sycamore Dr.', NULL, 'Springfield', 'CA', 'US', '700123', '1234-5678-9012', '0124', '123', 'John Smith');
